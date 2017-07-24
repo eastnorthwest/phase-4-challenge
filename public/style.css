@@ -1,0 +1,24 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+}
+
+.header-home {
+  height: 400px;
+  background-image: url('/img/vinyl-back.jpg');
+  background-position: 50% 75%;
+}
+
+.title-home {
+  padding: 150px 0px 0px 20px;
+  height: 400px;
+  width: 25%;
+  background-color: #000;
+  color: #DDD;
+  opacity: .7;
+}
+
+.margin-left {
+  margin-left: 20px;
+}
