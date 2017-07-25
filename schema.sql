@@ -3,3 +3,22 @@ CREATE TABLE albums (
   title VARCHAR(255) NOT NULL,
   artist VARCHAR(255) NOT NULL
 );
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY, 
+  name VARCHAR(255) NOT NULL, 
+  email VARCHAR(255) NOT NULL, 
+  password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE reviews (
+  id SERIAL PRIMARY KEY, 
+  text VARCHAR(255) NOT NULL, 
+  datetime TIMESTAMP
+);
+
+CREATE TABLE users_reviews (
+  user_id INTEGER REFERENCES users (id), 
+  review_id INTEGER REFERENCES reviews (id)
+);
+

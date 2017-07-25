@@ -1,1 +1,4 @@
-console.log('hello from the browser JavaScript')
+$(document).ready(function() {
+  console.log('Initialize');
+  Materialize.updateTextFields();
+})

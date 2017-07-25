@@ -22,3 +22,19 @@ html, body {
 .margin-left {
   margin-left: 20px;
 }
+
+.margin-top {
+  margin-top: 50px;
+}
+
+.margin-bottom {
+  margin-bottom: 50px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-height {
+  height: 85vh;
+}

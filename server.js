@@ -1,40 +1,25 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const database = require('./database')
+const database = require('./config/database')
 const app = express()
 
 require('ejs')
 app.set('view engine', 'ejs');
 
+require('dotenv').config()
+
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }))
 
 const users = require('./routes/users')
-
-app.get('/', (request, response) => {
-    database.getAlbums((error, albums) => {
-        if (error) {
-            response.status(500).render('error', { error: error })
-        } else {
-            response.render('index', { albums: albums })
-        }
-    })
-})
-
-app.get('/albums/:albumID', (request, response) => {
-    const albumID = request.params.albumID
-
-    database.getAlbumsByID(albumID, (error, albums) => {
-        if (error) {
-            response.status(500).render('error', { error: error })
-        } else {
-            const album = albums[0]
-            response.render('albums/album', { album: album })
-        }
-    })
-})
+const albums = require('./routes/albums')
 
 app.use('/users/', users)
+app.use('/albums/', albums)
+
+app.get('/', (request, response) => {
+    response.redirect('/albums/')
+})
 
 app.use((request, response) => {
     response.status(404).render('not_found')

@@ -1,8 +1,24 @@
 <% var page='Sign In' %>
 <%include ../shared/header%>
-<div class="row">
-    <div class="col s4 offset-s4">
-        <h3>Sign In</h3>
+<div class="valign-wrapper full-height">
+    <div class="row full-width">
+        <div class="col s4 offset-s4">
+            <h3>Sign In</h3>
+            <div class="divider margin-bottom"></div>
+            <form action="/users/signup" method="POST">
+                <div class="row">
+                        <div class="input-field">
+                            <input type="text" name="email" id="email" placeholder="john@smith.com"/>
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="input-field">
+                            <input name="password" id="password" type="password"/>
+                            <label for="password">Password</label>
+                        </div>
+                        <input class="btn margin-top" type="submit" value="Sign In!"/>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <%include ../shared/footer%>
