@@ -1,10 +1,22 @@
-const bcrypt = require('bcrypt-nodejs')
+const bcrypt = require('bcrypt')
 const users = require('../models/users')
 
-const checkParams = (params) => {
+const checkSignupParams = (params) => {
   // add messages later
   result = true;
   if (!params.name || !params.email || !params.password) {
+    result = false;
+  }
+  if (!checkEmail(params.email)) {
+    result = false;
+  }
+  return result;
+}
+
+const checkSigninParams = (params) => {
+  // add messages later
+  result = true;
+  if (!params.email || !params.password) {
     result = false;
   }
   if (!checkEmail(params.email)) {
@@ -18,13 +30,13 @@ const checkEmail = (email) => {
   return re.test(email);
 }
 
-const checkIfExists = (email) => {
+const checkExistsByEmail = (email) => {
   return new Promise((resolve, reject) => {
-    users.getUserByEmail(email).then((result) => {
-      console.log('getUserByEmail - resolved', result)
+    users.getUserByEmail(email).then((user) => {
+      console.log('getUserByEmail - resolved', user)
       resolve(result)
     }).catch(() => {
-      console.log('getUserByEmail - catch')
+      console.log('getUserByEmail - failed')
       reject(false)
     })
   })
@@ -32,18 +44,61 @@ const checkIfExists = (email) => {
 
 const createHashFromPassword = (password) => {
   return new Promise((resolve, reject) => {
-    var salt = process.env.BCRYPT_SALT || 'vinyl';
-    bcrypt.genSalt(10, function(error, salt) {
-      bcrypt.hash(password, salt, null, function(error2, hash2) {
-          console.log('createHashFromPassword', password, hash2, error2)
-          if (hash2) {
-            resolve(hash2)
-            return;
-          }
-          reject(error2)
-        });
-    });
+    bcrypt.hash(password, 10, function(error, hash) {
+        console.log('createHashFromPassword', password, hash, error)
+        if (hash) {
+          return resolve(hash)
+        }
+        reject(error2)
+      });
+      });
+}
+
+const checkLogin = (request) => {
+  return new Promise((resolve, reject) => {
+    users.getUserByEmail(request.body.email).then((user) => {
+      bcrypt.compare(request.body.password, user.password, (error, result) => {
+        if (result) {
+          console.log("Link session", request.sessionID)
+          request.session.regenerate(() => {
+            users.updateUserSession(user, request.sessionID).then((id) => {
+              resolve(user)
+            }).catch(() => {
+              reject(false)
+            })
+          })
+        } else {
+          reject(false)
+        }
+      })
+    }).catch(() => {
+      console.log('doLogin - failed')
+      reject(false)
+    })
   })
 }
 
-module.exports = {checkParams, checkIfExists, createHashFromPassword}
+const doLogout = (request) => {
+  return new Promise((resolve, reject) => {
+    users.deleteSession(request.sessionID).then(() => {
+      request.session.destroy(() => {
+        resolve();
+      });
+    })
+  })
+}
+
+const checkSession = (userId, session) => {
+  return new Promise((resolve, reject) => {
+    users.getUserById(userId).then((user) => {
+      if (user.session == session) {
+        return resolve(user);
+      }
+      reject(false)
+    }).catch(() => {
+      reject(false)
+    })
+  })
+}
+
+module.exports = {doLogout, checkLogin, checkSigninParams, checkSignupParams, checkExistsByEmail, createHashFromPassword, }

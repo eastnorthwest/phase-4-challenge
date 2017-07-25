@@ -15,17 +15,43 @@ router.get('/signin', (request, response) => {
   response.render('users/signin');
 })
 
+router.get('/users/:id', (request, response) => {
+  console.log('users profile', request.params)
+  if (!request.params.id) {
+      return response.redirect('/users/logout');
+  }
+  auth.checkSession(request.params.id, request.sessionID).then((user) => {
+    response.render('users/profile', {'user': user})
+  }).catch(() => {
+    response.redirect('/users/logout');
+  })
+})
+
+router.get('/logout', (request, response) => {
+  auth.doLogout(request.sessionID).then(() => {
+    response.redirect('/users/signin')
+  })
+})
+
+router.post('/signin', (request, response) => {
+  if (!auth.checkSigninParams(request.body)) {
+    return response.redirect('/users/signin?error')
+  }
+  auth.checkLogin(request).then((result) => {
+    response.redirect('/users/' + result.id)
+  }).catch(() => {
+    response.redirect('/users/signin?loginerror')
+  })
+})
+
 router.post('/signup', (request, response) => {
-  if (!auth.checkParams(request.body)) {
+  if (!auth.checkSignupParams(request.body)) {
     response.redirect('/users/signup?error')
     return;
   }
-  console.log('Do Signup')
-  auth.checkIfExists(request.body.email).then((result) => {
-    if (result) {
-      response.redirect('/users/signup?dupuseruerror')
-    }
-    console.log("Proceed to createHash")
+  auth.checkExistsByEmail(request.body.email).then((result) => {
+        response.redirect('/users/signup?dupuser')
+  }).catch(() => {
     auth.createHashFromPassword(request.body.password).then((hash) => {
       users.addUser(request.body, hash).then((result) => {
         response.redirect('/users/' + result.id)
@@ -33,12 +59,8 @@ router.post('/signup', (request, response) => {
         response.redirect('/users/signup?addusererror')
       })
     }).catch((err) => {
-      console.log("HashErr", err)
       response.redirect('/users/signup?createhasherror')
     })
-  }).catch((error) => {
-    console.log('checkIfExists Error', error)
-    response.redirect('/users/signup?errordup')
   })
 })
 
