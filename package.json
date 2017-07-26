@@ -20,7 +20,8 @@
     "express": "^4.15.3",
     "express-session": "^1.15.4",
     "moment": "^2.18.1",
-    "pg": "^6.2.4"
+    "pg": "^6.2.4",
+    "pg-transaction": "^1.0.4"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

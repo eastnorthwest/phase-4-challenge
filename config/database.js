@@ -1,4 +1,5 @@
 const pg = require('pg')
+const Transaction = require('pg-transaction')
 
 const dbName = 'vinyl'
 const connectionString = process.env.DATABASE_URL || `postgres://localhost:5432/${dbName}`
