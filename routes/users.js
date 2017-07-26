@@ -47,8 +47,12 @@ router.get('/:id', (request, response) => {
   auth.checkSession(request.params.id, request.sessionID).then((user) => {
     delete(user.password)
     response.locals.user = user
-    response.locals.user.joined = (moment(response.locals.user.datetime).isValid()) ? moment(response.locals.user.datetime).format("MMMM Do YYYY, h:mm a") : moment().format("MMMM Do YYYY, h:mm a'");
-    response.render('users/profile')
+    response.locals.user.joined = (moment(response.locals.user.datetime).isValid()) ? moment(response.locals.user.datetime).format("MMMM Do YYYY, h:mm a") : moment().format("MMMM Do YYYY, h:mm a'")
+    reviews.getReviews("userId", user.id).then((reviews) => {
+        response.render('users/profile', { reviews: reviews })
+      }).catch(() => {
+        response.status(500).render('error', { error: error })
+      })
   }).catch((error) => {
     response.status(500).render('error', { error: error })
   })

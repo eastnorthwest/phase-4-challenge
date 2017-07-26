@@ -1,0 +1,9 @@
+
+<% if (reviews && reviews.length) { %>
+    <% reviews.forEach(function(review) { %>
+        <% include ../partials/review %>
+    <%})%>    
+<% } else { %>
+    <div class="margin-top divider"></div>
+    <h5 class="grey-text text-darken-3 margin-top"><i>No reviews found</i></h5>
+<% } %>

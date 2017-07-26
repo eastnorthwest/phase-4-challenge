@@ -24,7 +24,7 @@ router.use((request, response, next) => {
 
 router.get('/', (request, response) => {
     albums.getAlbums().then((albums) => {
-      reviews.getReviews(3).then((reviews) => {
+      reviews.getReviews(null, null, 3).then((reviews) => {
         response.render('albums/index', { albums: albums, reviews: reviews })
       }).catch(() => {
         response.status(500).render('error', { error: error })
@@ -37,7 +37,7 @@ router.get('/', (request, response) => {
 router.get('/:albumID', (request, response) => {
     const albumID = request.params.albumID
     albums.getAlbumByID(albumID).then((album) => {
-      reviews.getReviewsByAlbumId(albumID).then((reviews) => {
+      reviews.getReviews("albumId", albumID).then((reviews) => {
         response.render('albums/album', { album: album, reviews: reviews })
       }).catch(() => {
         response.status(500).render('error', { error: error })

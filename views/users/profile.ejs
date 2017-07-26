@@ -27,6 +27,11 @@
         <h2 class="cyan-text margin-top">
             Reviews
         </h2>
+        <div class="margin-left">
+            <% reviews.forEach(function(review) { %>
+                <% include ../partials/review %>
+            <%})%>    
+        </div>
     </div>
 </div>
 <% include ../partials/footer %>
