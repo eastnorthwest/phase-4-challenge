@@ -1,5 +1,7 @@
 const database = require('../config/database')
 
+const albums = require('../models/albums')
+
 const getReviewByID = (id) => {
   return new Promise((resolve, reject) => {
     database.query('SELECT * FROM reviews WHERE id = $1', [id], (error, result) => {
@@ -12,9 +14,27 @@ const getReviewByID = (id) => {
   })
 }
 
-const getReviewsByAlbumId = (albumId) => {
+const getReviews = (max) => {
+  var maxResult = max || 10;
   return new Promise((resolve, reject) => {
-    database.query('SELECT r.*, u.*, a.* FROM reviews r, users u, albums a JOIN users_reviews ur ON ur.review_id = r.id JOIN ur ON ur.album_id =  a.id JOIN ur ON ur.user_id = u.id WHERE a.id = $1', [albumId], (error, result) => {
+    database.query('SELECT r.text, r.datetime, u.name, a.id as albumid, a.title \
+                    FROM users_reviews ur JOIN reviews r ON ur.review_id = r.id \
+                    JOIN users u ON ur.user_id = u.id JOIN albums a ON a.id = ur.album_id ORDER BY r.datetime DESC LIMIT $1', [maxResult], (error, result) => {
+      if (result && result.length) {
+        resolve(result)
+        return;
+      }
+      reject(error)
+    })
+  })
+}
+
+const getReviewsByAlbumId = (albumId, max) => {
+  var maxResult = max || 10;
+  return new Promise((resolve, reject) => {
+    database.query('SELECT r.text, r.datetime, u.name, a.id as albumid, a.title \
+                    FROM users_reviews ur JOIN reviews r ON ur.review_id = r.id \
+                    JOIN users u ON ur.user_id = u.id JOIN albums a ON a.id = ur.album_id WHERE a.id = $1 ORDER BY r.datetime DESC LIMIT $2', [albumId, maxResult], (error, result) => {
       if (result && result.length) {
         resolve(result)
         return;
@@ -25,11 +45,12 @@ const getReviewsByAlbumId = (albumId) => {
 }
 
 const checkNewReview = (form) => {
+  console.log('checkNewReview', form)
   return new Promise((resolve, reject) => {
     if (!form.review || !form.albumId) {
       reject(false)
     }
-    getAlbumByID(form.albumId).then((album) => {
+    albums.getAlbumByID(form.albumId).then((album) => {
       resolve(album)
     }).catch((error) => {
       reject(error)
@@ -39,27 +60,24 @@ const checkNewReview = (form) => {
 
 
 const addReview = (form, user) => {
+  console.log("addReview", form, user)
   return new Promise((resolve, reject) => {
     if (!form.review || !form.albumId || !user.id) {
-      reject(false)
+      return reject(false)
     }
     var transaction = database.tx();
     transaction.on('error', (error) => {
+      console.log("Error... ", error)
       transaction.rollback('start');
-      reject(error)
+      return reject(error)
     })
     transaction.begin()
     transaction.savepoint('start');
-    transaction.query('INSERT INTO reviews (text, datetime) VALUES ($1, NOW()) RETURNING id', [form.review])
-    transaction.query('INSERT INTO users_reviews (user_id, album_id, review_id) VALUES ($1, $2, $3)', [user.id, form.albumId, id])
+    transaction.query('INSERT INTO reviews (text, datetime) VALUES ($1::text, NOW()) RETURNING id', [form.review])
+    transaction.query('INSERT INTO users_reviews (user_id, album_id, review_id) VALUES ($1, $2, currval(\'reviews_id_seq\'))', [user.id, form.albumId])
     transaction.commit();
-    transaction.release('start');
-    getReviewByID(id).then((review) => {
-      resolve(review)
-    }).catch((error) => {
-      reject(error)
-    })
+    resolve()
   })
 }
 
-module.exports = {getReviewsByAlbumId, getReviewByID, checkNewReview, addReview}
+module.exports = {getReviewsByAlbumId, getReviewByID, getReviews, checkNewReview, addReview}

@@ -5,6 +5,7 @@ const router = express.Router()
 
 const users = require('../models/users')
 const albums = require('../models/albums')
+const reviews = require('../models/reviews')
 const auth = require('../auth/auth')
 
 router.use(bodyParser.urlencoded({ extended: false }))
@@ -14,7 +15,7 @@ router.use((request, response, next) => {
     response.locals.user = user
     next()
   }).catch(() => {
-    response.redirect('/auth/logout');
+    return response.redirect('/auth/logout');
   })
 })
 
@@ -28,14 +29,14 @@ router.get('/newreview/:albumID', (request, response) => {
 })
 
 router.post('/newreview', (request, response) => {
-    albums.checkNewReview(request.body).then((album) => {
-      reviews.addReview(request.body).then((review) => {
+    reviews.checkNewReview(request.body).then((album) => {
+      reviews.addReview(request.body, response.locals.user).then(() => {
         response.redirect('/albums/' + request.body.albumId)
       }).catch(() => {
         response.redirect('/albums/' + request.body.albumId)
       })
-    }).catch(() => {
-        response.redirect('/')
+    }).catch((error) => {
+      response.redirect('/albums/' + request.body.albumId)
     })
 })
 
@@ -48,8 +49,8 @@ router.get('/:id', (request, response) => {
     response.locals.user = user
     response.locals.user.joined = (moment(response.locals.user.datetime).isValid()) ? moment(response.locals.user.datetime).format("MMMM Do YYYY, h:mm a") : moment().format("MMMM Do YYYY, h:mm a'");
     response.render('users/profile')
-  }).catch(() => {
-    response.redirect('/auth/logout');
+  }).catch((error) => {
+    response.status(500).render('error', { error: error })
   })
 })
 

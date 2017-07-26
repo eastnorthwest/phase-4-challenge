@@ -94,7 +94,7 @@ const doLogout = (request) => {
 
 const checkSession = (userId, session) => {
   return new Promise((resolve, reject) => {
-    users.getUserById(userId).then((user) => {
+    users.getUserByID(userId).then((user) => {
       if (user.session == session) {
         return resolve(user);
       }

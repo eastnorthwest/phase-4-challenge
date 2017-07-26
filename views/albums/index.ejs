@@ -1,6 +1,6 @@
 
 <% var page='' %>
-<%include ../shared/header%>
+<% include ../partials/header %>
 <div class="header-home">
     <div class="title-home">
         <h2>Vinyl Records</h2>
@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col s3">
         <h3>Records</h3>
-        <div class="album-list margin-left">
+        <div class="margin-left">
             <% albums.forEach(function(album) { %>
             <div>
                 <h5>
@@ -20,10 +20,15 @@
                 <span><%= album.artist %></span>
             </div>
             <% }) %>
-    </div>
+        </div>
     </div>
     <div class="col s9">
         <h3>Recent Reviews</h3>
+        <div class="margin-left">
+            <% reviews.forEach(function(review) { %>
+                <% include ../partials/review %>
+            <%})%>    
+        </div>
     </div>
 </div>
-<%include ../shared/footer%>
+<% include ../partials/footer %>

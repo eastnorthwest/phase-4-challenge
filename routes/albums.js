@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router();
 
 const albums = require('../models/albums')
+const reviews = require('../models/reviews')
 const users = require('../models/users')
 
 const auth = require('../auth/auth')
@@ -23,7 +24,11 @@ router.use((request, response, next) => {
 
 router.get('/', (request, response) => {
     albums.getAlbums().then((albums) => {
-      response.render('albums/index', { albums: albums })
+      reviews.getReviews(3).then((reviews) => {
+        response.render('albums/index', { albums: albums, reviews: reviews })
+      }).catch(() => {
+        response.status(500).render('error', { error: error })
+      })
     }).catch((error) => {
       response.status(500).render('error', { error: error })
     })
@@ -32,8 +37,11 @@ router.get('/', (request, response) => {
 router.get('/:albumID', (request, response) => {
     const albumID = request.params.albumID
     albums.getAlbumByID(albumID).then((album) => {
-      console.log("AlbumPage", album)
-      response.render('albums/album', { album: album })
+      reviews.getReviewsByAlbumId(albumID).then((reviews) => {
+        response.render('albums/album', { album: album, reviews: reviews })
+      }).catch(() => {
+        response.status(500).render('error', { error: error })
+      })
     }).catch((error) => {
       response.status(500).render('error', { error: error })
     })

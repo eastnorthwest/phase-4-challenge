@@ -12,7 +12,7 @@ const getUserByEmail = (email) => {
   })
 }
 
-const getUserById = (id) => {
+const getUserByID = (id) => {
   return new Promise((resolve, reject) => {
     database.query('SELECT * FROM users WHERE id = $1', [id], (error, result) => {
       if (result && result.length) {
@@ -75,4 +75,4 @@ const deleteSession = (session) => {
   })
 }
 
-module.exports = {updateUserSession, deleteSession, getUserById, getUserByEmail, getUserBySession, addUser}
+module.exports = {updateUserSession, deleteSession, getUserByID, getUserByEmail, getUserBySession, addUser}

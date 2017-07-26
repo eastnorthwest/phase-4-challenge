@@ -18,8 +18,8 @@ router.get('/signin', (request, response) => {
 router.get('/logout', (request, response) => {
   auth.doLogout(request).then(() => {
     response.redirect('/auth/signin?ok')
-  }).catch(() => {
-    response.redirect('/auth/signin?err')
+  }).catch((error) => {
+    response.status(500).render('error', { error: error })
   })
 })
 
@@ -45,11 +45,11 @@ router.post('/signup', (request, response) => {
     auth.createHashFromPassword(request.body.password).then((hash) => {
       users.addUser(request.body, hash).then((result) => {
         response.redirect('/users/' + result.id)
-      }).catch(() => {
-        response.redirect('/auth/signup?addusererror')
+      }).catch((error) => {
+        response.status(500).render('error', { error: error })
       })
-    }).catch((err) => {
-      response.redirect('/auth/signup?createhasherror')
+    }).catch((error) => {
+      response.status(500).render('error', { error: error })
     })
   })
 })

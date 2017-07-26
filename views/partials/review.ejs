@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col s10">
+        <div class="row">
+            <div class="col s8"><h5><u><a href='/albums/<%= review.albumid %>'><%= review.title %></a></u></h5></div>
+            <div class="col s4"><h6><i><%= review.reviewDate %></i></h6></div>
+        </div>
+         <div class="row">
+            <div class="col s12 grey-text text-darken-4"><i><%= review.text %></i></div>
+        </div>       
+        <div class="row">
+            <div class="col s12 right-align">by <u><%= review.name %></u></div>
+        </div> 
+    </div>
+    <% if (user.id) { %>
+        <div class="col s2">
+        </div>
+    <% } %>
+</div>

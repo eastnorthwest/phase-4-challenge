@@ -14,7 +14,7 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(cookieParser());
-app.use(session({secret: process.env.COOKIE_SECRET || 'vinyl'}));
+app.use(session({secret: process.env.COOKIE_SECRET || 'vinyl', maxAge: null}));
 
 const albums = require('./routes/albums')
 const auth = require('./routes/auth')
