@@ -2,6 +2,10 @@
 
 A community for record enthusiasts to review their favorite albums.
 
+View an online demo of this app at the following url:
+
+https://lg-phase-4-challenge.herokuapp.com
+
 ## Getting Started
 
 Clone this repo
