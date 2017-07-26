@@ -19,10 +19,12 @@ app.use(session({secret: process.env.COOKIE_SECRET || 'vinyl', maxAge: null}));
 const albums = require('./routes/albums')
 const auth = require('./routes/auth')
 const users = require('./routes/users')
+const reviews = require('./routes/reviews')
 
 app.use('/albums/', albums)
 app.use('/auth/', auth)
 app.use('/users/', users)
+app.use('/reviews/', reviews)
 
 app.get('/', (request, response) => {
     response.redirect('/albums/')

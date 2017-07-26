@@ -58,3 +58,7 @@ html, body {
 .full-height {
   height: 85vh;
 }
+
+.col.s2.grey.lighten-3.delete-box.center-align {
+  min-height: 140px;
+}

@@ -19,27 +19,6 @@ router.use((request, response, next) => {
   })
 })
 
-router.get('/newreview/:albumID', (request, response) => {
-    const albumID = request.params.albumID
-    albums.getAlbumByID(albumID).then((album) => {
-      response.render('users/newreview', { album: album })
-    }).catch((error) => {
-      response.status(500).render('error', { error: error })
-    })
-})
-
-router.post('/newreview', (request, response) => {
-    reviews.checkNewReview(request.body).then((album) => {
-      reviews.addReview(request.body, response.locals.user).then(() => {
-        response.redirect('/albums/' + request.body.albumId)
-      }).catch(() => {
-        response.redirect('/albums/' + request.body.albumId)
-      })
-    }).catch((error) => {
-      response.redirect('/albums/' + request.body.albumId)
-    })
-})
-
 router.get('/:id', (request, response) => {
   if (!request.params.id) {
       return response.redirect('/auth/logout');

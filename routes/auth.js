@@ -44,7 +44,11 @@ router.post('/signup', (request, response) => {
   }).catch(() => {
     auth.createHashFromPassword(request.body.password).then((hash) => {
       users.addUser(request.body, hash).then((result) => {
-        response.redirect('/users/' + result.id)
+        auth.checkLogin(request).then((user) => { 
+          response.redirect('/users/' + user.id)
+        }).catch(() => {
+          response.redirect('/auth/signup?signuperror')
+        })
       }).catch((error) => {
         response.status(500).render('error', { error: error })
       })

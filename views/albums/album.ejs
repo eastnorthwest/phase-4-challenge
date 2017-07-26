@@ -15,14 +15,12 @@
       <div class="col s6 right-align">
         <% if (user.id) { %> 
         <h4>
-          <a class="btn" href="/users/newreview/<%= album.id %>">Add Review</a>
+          <a class="btn" href="/reviews/newreview/<%= album.id %>">Add Review</a>
         </h4>
         <% } %>
       </div>
     </div>
-    <div class="margin-left">
-      <% include ../partials/reviews %>
-    </div>
+    <% include ../partials/reviews %>
   </div>
 </div>
 <% include ../partials/footer %>

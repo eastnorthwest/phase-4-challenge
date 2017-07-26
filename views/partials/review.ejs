@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col s10">
+    <div class="col <%=(page != 'Profile') ? 's12' : 's10'%>">
         <div class="row">
             <div class="col s8"><h5><u><a href='/albums/<%= review.albumid %>'><%= review.title %></a></u></h5></div>
             <div class="col s4 right-align"><h6 class="small-margin-top"><i><%= review.reviewDate %></i></h6></div>
@@ -11,8 +11,9 @@
             <div class="col s12 right-align">by <u><%= review.name %></u></div>
         </div> 
     </div>
-    <% if (user.id) { %>
-        <div class="col s2">
+    <% if (user.id && page == 'Profile') { %>
+        <div class="col s2 grey lighten-3 delete-box center-align">
+            <i class="margin-top fa fa-trash fa-2x"></i>
         </div>
     <% } %>
 </div>

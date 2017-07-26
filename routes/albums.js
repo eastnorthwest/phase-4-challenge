@@ -37,7 +37,7 @@ router.get('/', (request, response) => {
 router.get('/:albumID', (request, response) => {
     const albumID = request.params.albumID
     albums.getAlbumByID(albumID).then((album) => {
-      reviews.getReviews("albumId", albumID).then((reviews) => {
+      reviews.getReviews("albumId", albumID, 99).then((reviews) => {
         response.render('albums/album', { album: album, reviews: reviews })
       }).catch(() => {
         response.status(500).render('error', { error: error })
