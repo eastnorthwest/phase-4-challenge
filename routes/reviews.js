@@ -19,6 +19,14 @@ router.use((request, response, next) => {
   })
 })
 
+router.get('/delete/:id', (request, response) => {
+    reviews.deleteReviewById(request.params.id).then(() => {
+      return response.redirect('/users/' + response.locals.user.id);
+    }).catch((error) => {
+      response.status(500).render('error', { error: error })
+    })
+})
+
 router.get('/newreview/:albumID', (request, response) => {
     const albumID = request.params.albumID
     albums.getAlbumByID(albumID).then((album) => {

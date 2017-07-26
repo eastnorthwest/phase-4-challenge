@@ -15,6 +15,27 @@ const getReviewByID = (id) => {
   })
 }
 
+const deleteReviewById = (id) => {
+  return new Promise((resolve, reject) => {
+    console.log("Delete Review", id)
+    if (!id) {
+      return reject(false)
+    }
+    var transaction = database.tx();
+    transaction.on('error', (error) => {
+      console.log("Error... ", error)
+      return reject(error)
+    })
+    transaction.begin()
+    transaction.savepoint('start');
+    transaction.query('DELETE FROM users_reviews WHERE review_id = $1', [id])
+    transaction.query('DELETE FROM reviews WHERE id = $1', [id])
+    transaction.release('start')
+    transaction.commit();
+    resolve()
+  })
+}
+
 const getReviews = (mode, id, max) => {
   var filter = '', orderBy = ''
   var maxResult = max || 10
@@ -35,7 +56,7 @@ const getReviews = (mode, id, max) => {
       params = [maxResult]
   }
   return new Promise((resolve, reject) => {
-    database.query('SELECT r.text, r.datetime, u.name, a.id as albumid, a.title \
+    database.query('SELECT r.id, r.text, r.datetime, u.name, a.id as albumid, a.title \
                     FROM users_reviews ur JOIN reviews r ON ur.review_id = r.id \
                     JOIN users u ON ur.user_id = u.id JOIN albums a ON a.id = ur.album_id ' + filter + ' ' + orderByLimit, params, (error, result) => {
       if (result) {
@@ -74,7 +95,6 @@ const addReview = (form, user) => {
     var transaction = database.tx();
     transaction.on('error', (error) => {
       console.log("Error... ", error)
-      //transaction.rollback('start');
       return reject(error)
     })
     transaction.begin()
@@ -87,4 +107,4 @@ const addReview = (form, user) => {
   })
 }
 
-module.exports = {getReviewByID, getReviews, checkNewReview, addReview}
+module.exports = {getReviewByID, getReviews, checkNewReview, addReview, deleteReviewById}
