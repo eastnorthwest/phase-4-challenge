@@ -1,11 +1,23 @@
 <% var page='' %>
 <%include ../shared/header%>
 <div class="row">
-    <div class="col s12">
-      <h1><%= album.title %></h1>
-      <em>by <%= album.artist %></em>
-
-      <h2>Reviews</h2>
+  <div class="col s6 offset-s3">
+    <div class="row large-margin-top">
+      <div class="col s12">
+        <h1 class="cyan-text" ><%= album.title %></h1>
+        <em>by <%= album.artist %></em>
+      </div>
     </div>
+    <div class="row">
+      <div class="col s6">
+        <h4>Reviews</h4>
+      </div>
+      <div class="col s6 right-align">
+        <h4>
+          <a class="btn" href="/users/newreview/<%= album.id %>">Add Review</a>
+        </h4>
+      </div>
+    </div>
+  </div>
 </div>
 <%include ../shared/footer%>

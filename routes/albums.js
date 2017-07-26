@@ -22,24 +22,20 @@ router.use((request, response, next) => {
 })
 
 router.get('/', (request, response) => {
-    albums.getAlbums((error, albums) => {
-        if (error) {
-            response.status(500).render('error', { error: error })
-        } else {
-            response.render('albums/index', { albums: albums })
-        }
+    albums.getAlbums().then((albums) => {
+      response.render('albums/index', { albums: albums })
+    }).catch((error) => {
+      response.status(500).render('error', { error: error })
     })
 })
 
 router.get('/:albumID', (request, response) => {
     const albumID = request.params.albumID
-    albums.getAlbumsByID(albumID, (error, albums) => {
-        if (error) {
-            response.status(500).render('error', { error: error })
-        } else {
-            const album = albums[0]
-            response.render('albums/album', { album: album })
-        }
+    albums.getAlbumByID(albumID).then((album) => {
+      console.log("AlbumPage", album)
+      response.render('albums/album', { album: album })
+    }).catch((error) => {
+      response.status(500).render('error', { error: error })
     })
 })
 

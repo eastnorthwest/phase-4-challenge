@@ -1,14 +1,27 @@
 const database = require('../config/database')
 
-const getAlbums = function(callback) {
-  database.query("SELECT * FROM albums", [], callback)
+const getAlbumByID = (id) => {
+  return new Promise((resolve, reject) => {
+    database.query('SELECT * FROM albums WHERE id = $1', [id], (error, result) => {
+      if (result && result.length) {
+        resolve(result[0])
+        return;
+      }
+      reject(error)
+    })
+  })
 }
 
-const getAlbumsByID = function(albumID, callback) {
-  database.query("SELECT * FROM albums WHERE id = $1", [albumID], callback)
+const getAlbums = () => {
+  return new Promise((resolve, reject) => {
+    database.query('SELECT * FROM albums', [], (error, result) => {
+      if (result && result.length) {
+        resolve(result)
+        return;
+      }
+      reject(error)
+    })
+  })
 }
 
-module.exports = {
-  getAlbums,
-  getAlbumsByID
-}
+module.exports = {getAlbums, getAlbumByID}

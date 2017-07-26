@@ -4,16 +4,28 @@ const bodyParser = require('body-parser')
 const router = express.Router()
 
 const users = require('../models/users')
+const albums = require('../models/albums')
 const auth = require('../auth/auth')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
 router.use((request, response, next) => {
-  if (!request.session || !request.sessionID) {
+  -- protect this path
+  console.log('auth', request.sessionID)
+  auth.checkUserSession(request.sessionID).next(() => {
+    next()
+  }).catch(() => {
     response.redirect('/auth/logout');
-    return;
-  }
-  next()
+  })
+})
+
+router.get('/newreview/:albumID', (request, response) => {
+    const albumID = request.params.albumID
+    albums.getAlbumByID(albumID).then((album) => {
+      response.render('users/newreview', { album: album })
+    }).catch((error) => {
+      response.status(500).render('error', { error: error })
+    })
 })
 
 router.get('/:id', (request, response) => {
