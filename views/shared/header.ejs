@@ -11,11 +11,16 @@
 <body>
 
     <nav>
-        <div class="nav-wrapper">
-            &nbsp;<a href="/" class="brand-logo">Vinyl Records <% if (page) { %> | <%= page %><% } %></a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/users/signup">Sign Up</a></li>
-                <li><a href="/users/signin">Sign In</a></li>
+        <div class="nav-wrapper"><a href="/" class="brand-logo">Vinyl Records <% if (page) { %> | <%= page %><% } %></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down links">
+                <% if ((typeof user != 'undefined') && (user.id)) { %>
+                    <li><a href="/users/<%= user.id %>">Profile</a></li>
+                    <li><a href="/auth/logout">Sign Out</a></li>
+                <% } else { %>
+                    <li><a href="/auth/signup">Sign Up</a></li>
+                    <li><a href="/auth/signin">Sign In</a></li>
+                <% } %>
+              
             </ul>
         </div>
     </nav>

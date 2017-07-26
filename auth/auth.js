@@ -33,10 +33,8 @@ const checkEmail = (email) => {
 const checkExistsByEmail = (email) => {
   return new Promise((resolve, reject) => {
     users.getUserByEmail(email).then((user) => {
-      console.log('getUserByEmail - resolved', user)
       resolve(result)
     }).catch(() => {
-      console.log('getUserByEmail - failed')
       reject(false)
     })
   })
@@ -45,7 +43,6 @@ const checkExistsByEmail = (email) => {
 const createHashFromPassword = (password) => {
   return new Promise((resolve, reject) => {
     bcrypt.hash(password, 10, function(error, hash) {
-        console.log('createHashFromPassword', password, hash, error)
         if (hash) {
           return resolve(hash)
         }
@@ -59,9 +56,9 @@ const checkLogin = (request) => {
     users.getUserByEmail(request.body.email).then((user) => {
       bcrypt.compare(request.body.password, user.password, (error, result) => {
         if (result) {
-          console.log("Link session", request.sessionID)
           request.session.regenerate(() => {
-            users.updateUserSession(user, request.sessionID).then((id) => {
+              delete(user.password)
+              users.updateUserSession(user, request.sessionID).then((id) => {
               resolve(user)
             }).catch(() => {
               reject(false)
@@ -80,11 +77,19 @@ const checkLogin = (request) => {
 
 const doLogout = (request) => {
   return new Promise((resolve, reject) => {
-    users.deleteSession(request.sessionID).then(() => {
+    if (!request || !request.sessionID) {
+      resolve();
+      return;
+    }
+    users.deleteSession(request.sessionID).then((result) => {
       request.session.destroy(() => {
         resolve();
       });
-    })
+    }).catch(() => {
+      request.session.destroy(() => {
+        resolve();
+      });
+    });
   })
 }
 
@@ -101,4 +106,21 @@ const checkSession = (userId, session) => {
   })
 }
 
-module.exports = {doLogout, checkLogin, checkSigninParams, checkSignupParams, checkExistsByEmail, createHashFromPassword, }
+const checkUserSession = (session) => {
+  return new Promise((resolve, reject) => {
+    if (!session) {
+      return reject(false)
+    }
+    users.getUserBySession(session).then((user) => {
+      if (user && user.id) {
+        delete(user.password)
+        return resolve(user)
+      }
+      reject(false);
+    }).catch(() => {
+      reject(false)
+    })
+  })
+}
+
+module.exports = {checkSignupParams, checkSigninParams, checkExistsByEmail, createHashFromPassword, checkLogin, doLogout, checkSession, checkUserSession}

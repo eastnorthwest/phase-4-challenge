@@ -1,24 +1,32 @@
-<% var page='Sign In' %>
+<% var page='' %>
 <%include ../shared/header%>
-<div class="valign-wrapper full-height">
-    <div class="row full-width">
-        <div class="col s4 offset-s4">
-            <h3>Sign In</h3>
-            <div class="divider margin-bottom"></div>
-            <form action="/users/signin" method="POST">
-                <div class="row">
-                        <div class="input-field">
-                            <input type="text" name="email" id="email" placeholder="john@smith.com"/>
-                            <label for="email">Email</label>
-                        </div>
-                        <div class="input-field">
-                            <input name="password" id="password" type="password"/>
-                            <label for="password">Password</label>
-                        </div>
-                        <input class="btn margin-top" type="submit" value="Sign In!"/>
-                </div>
-            </form>
+<div class="row">
+    <div class="col s4 center-align">
+        <img class="large-margin-top" src="https://api.adorable.io/avatars/285/hsmcdonald@gmail.com.png"/>
+    </div>
+    <div class="col s8">
+        <h2 class="cyan-text large-margin-top">
+            <%= user.name || 'User' %>
+        </h2>
+        <div class="row">
+            <div class="col s6">
+                <h4>Email:</h4>
+            </div>
+            <div class="col s6">
+                <h4><%= user.email || 'user@email.com' %></h4>
+            </div>
         </div>
+        <div class="row">
+            <div class="col s6">
+                <h4>Date joined:</h4>
+            </div>
+            <div class="col s6">
+                <h4><%= user.joined %></h4>
+            </div>
+        </div>
+        <h2 class="cyan-text margin-top">
+            Reviews
+        </h2>
     </div>
 </div>
 <%include ../shared/footer%>

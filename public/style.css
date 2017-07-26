@@ -4,6 +4,14 @@ html, body {
   width: 100vw;
 }
 
+.brand-logo {
+  margin-left: 30px;
+}
+
+.links {
+  margin-right: 40px;
+}
+
 .header-home {
   height: 400px;
   background-image: url('/img/vinyl-back.jpg');
@@ -21,6 +29,14 @@ html, body {
 
 .margin-left {
   margin-left: 20px;
+}
+
+.margin-right {
+  margin-right: 20px;
+}
+
+.large-margin-top {
+  margin-top: 85px;
 }
 
 .margin-top {

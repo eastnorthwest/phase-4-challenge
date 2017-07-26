@@ -2,10 +2,27 @@
 const express = require('express')
 const router = express.Router();
 
-const albumsModel = require('../models/albums')
+const albums = require('../models/albums')
+const users = require('../models/users')
+
+const auth = require('../auth/auth')
+
+router.use((request, response, next) => {
+  if (!request.session || !request.sessionID) {
+    next();
+    return;
+  }
+  auth.checkUserSession(request.sessionID).then((user) => {
+    response.locals.user = user;
+    next();
+  }).catch(() => {
+    response.locals.user = {};
+    next();
+  })
+})
 
 router.get('/', (request, response) => {
-    albumsModel.getAlbums((error, albums) => {
+    albums.getAlbums((error, albums) => {
         if (error) {
             response.status(500).render('error', { error: error })
         } else {
@@ -16,7 +33,7 @@ router.get('/', (request, response) => {
 
 router.get('/:albumID', (request, response) => {
     const albumID = request.params.albumID
-    albumsModel.getAlbumsByID(albumID, (error, albums) => {
+    albums.getAlbumsByID(albumID, (error, albums) => {
         if (error) {
             response.status(500).render('error', { error: error })
         } else {
@@ -24,6 +41,10 @@ router.get('/:albumID', (request, response) => {
             response.render('albums/album', { album: album })
         }
     })
+})
+
+router.use((request, response) => {
+    response.status(404).render('not_found')
 })
 
 module.exports = router;

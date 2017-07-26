@@ -1,67 +1,37 @@
+const moment = require('moment')
 const express = require('express')
-const router = express.Router()
 const bodyParser = require('body-parser')
+const router = express.Router()
 
 const users = require('../models/users')
 const auth = require('../auth/auth')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
-router.get('/signup', (request, response) => {
-  response.render('users/signup');
-})
-
-router.get('/signin', (request, response) => {
-  response.render('users/signin');
-})
-
-router.get('/users/:id', (request, response) => {
-  console.log('users profile', request.params)
-  if (!request.params.id) {
-      return response.redirect('/users/logout');
-  }
-  auth.checkSession(request.params.id, request.sessionID).then((user) => {
-    response.render('users/profile', {'user': user})
-  }).catch(() => {
-    response.redirect('/users/logout');
-  })
-})
-
-router.get('/logout', (request, response) => {
-  auth.doLogout(request.sessionID).then(() => {
-    response.redirect('/users/signin')
-  })
-})
-
-router.post('/signin', (request, response) => {
-  if (!auth.checkSigninParams(request.body)) {
-    return response.redirect('/users/signin?error')
-  }
-  auth.checkLogin(request).then((result) => {
-    response.redirect('/users/' + result.id)
-  }).catch(() => {
-    response.redirect('/users/signin?loginerror')
-  })
-})
-
-router.post('/signup', (request, response) => {
-  if (!auth.checkSignupParams(request.body)) {
-    response.redirect('/users/signup?error')
+router.use((request, response, next) => {
+  if (!request.session || !request.sessionID) {
+    response.redirect('/auth/logout');
     return;
   }
-  auth.checkExistsByEmail(request.body.email).then((result) => {
-        response.redirect('/users/signup?dupuser')
+  next()
+})
+
+router.get('/:id', (request, response) => {
+  if (!request.params.id) {
+      return response.redirect('/auth/logout');
+  }
+  auth.checkSession(request.params.id, request.sessionID).then((user) => {
+    delete(user.password)
+    response.locals.user = user
+    response.locals.user.joined = (moment(response.locals.user.datetime).isValid()) ? moment(response.locals.user.datetime).format("MMMM Do YYYY, h:mm a") : moment().format("MMMM Do YYYY, h:mm a'");
+    response.render('users/profile')
   }).catch(() => {
-    auth.createHashFromPassword(request.body.password).then((hash) => {
-      users.addUser(request.body, hash).then((result) => {
-        response.redirect('/users/' + result.id)
-      }).catch(() => {
-        response.redirect('/users/signup?addusererror')
-      })
-    }).catch((err) => {
-      response.redirect('/users/signup?createhasherror')
-    })
+    response.redirect('/auth/logout');
   })
+})
+
+router.use((request, response) => {
+    response.status(404).render('not_found')
 })
 
 module.exports = router;

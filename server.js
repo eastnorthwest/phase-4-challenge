@@ -16,11 +16,13 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser());
 app.use(session({secret: process.env.COOKIE_SECRET || 'vinyl'}));
 
-const users = require('./routes/users')
 const albums = require('./routes/albums')
+const auth = require('./routes/auth')
+const users = require('./routes/users')
 
-app.use('/users/', users)
 app.use('/albums/', albums)
+app.use('/auth/', auth)
+app.use('/users/', users)
 
 app.get('/', (request, response) => {
     response.redirect('/albums/')
