@@ -48,7 +48,7 @@ const createHashFromPassword = (password) => {
         }
         reject(error2)
       });
-      });
+    });
 }
 
 const checkLogin = (request) => {
@@ -69,7 +69,6 @@ const checkLogin = (request) => {
         }
       })
     }).catch(() => {
-      console.log('doLogin - failed')
       reject(false)
     })
   })
@@ -106,7 +105,7 @@ const checkSession = (userId, session) => {
   })
 }
 
-const checkUserSession = (session) => {
+const getUserBySession = (session) => {
   return new Promise((resolve, reject) => {
     if (!session) {
       return reject(false)
@@ -123,4 +122,4 @@ const checkUserSession = (session) => {
   })
 }
 
-module.exports = {checkSignupParams, checkSigninParams, checkExistsByEmail, createHashFromPassword, checkLogin, doLogout, checkSession, checkUserSession}
+module.exports = {checkSignupParams, checkSigninParams, checkExistsByEmail, createHashFromPassword, checkLogin, doLogout, checkSession, getUserBySession}

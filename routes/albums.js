@@ -9,15 +9,15 @@ const auth = require('../auth/auth')
 
 router.use((request, response, next) => {
   if (!request.session || !request.sessionID) {
-    next();
-    return;
+    next()
+    return
   }
-  auth.checkUserSession(request.sessionID).then((user) => {
-    response.locals.user = user;
-    next();
+  auth.getUserBySession(request.sessionID).then((user) => {
+    response.locals.user = user
+    next()
   }).catch(() => {
-    response.locals.user = {};
-    next();
+    response.locals.user = {}
+    next()
   })
 })
 

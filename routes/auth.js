@@ -8,18 +8,18 @@ const auth = require('../auth/auth')
 router.use(bodyParser.urlencoded({ extended: false }))
 
 router.get('/signup', (request, response) => {
-  response.render('auth/signup');
+  response.render('auth/signup')
 })
 
 router.get('/signin', (request, response) => {
-  response.render('auth/signin');
+  response.render('auth/signin')
 })
 
 router.get('/logout', (request, response) => {
-  auth.doLogout(request.sessionID).then(() => {
-    response.redirect('/auth/signin')
+  auth.doLogout(request).then(() => {
+    response.redirect('/auth/signin?ok')
   }).catch(() => {
-    response.redirect('/auth/signin')
+    response.redirect('/auth/signin?err')
   })
 })
 

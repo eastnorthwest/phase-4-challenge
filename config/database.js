@@ -21,4 +21,9 @@ const query = function(sql, variables, callback){
   })
 }
 
-module.exports = {query}
+const tx = function() {
+  var transaction = new Transaction(client);
+  return transaction
+}
+
+module.exports = {query, tx}

@@ -36,9 +36,9 @@ const getUserBySession = (session) => {
   })
 }
 
-const addUser = (params, hash) => {
+const addUser = (form, hash) => {
   return new Promise((resolve, reject) => {
-    database.query('INSERT INTO users (name, email, password, datetime) VALUES ($1, $2, $3, NOW()) RETURNING id', [params.name, params.email, hash], (error, result) => {
+    database.query('INSERT INTO users (name, email, password, datetime) VALUES ($1, $2, $3, NOW()) RETURNING id', [form.name, form.email, hash], (error, result) => {
       console.log('AddUser', error, result)
       if (result) {
         resolve(result[0])
@@ -74,30 +74,5 @@ const deleteSession = (session) => {
     })
   })
 }
-
-/*
-app.get('/', (request, response) => {
-    database.getAlbums((error, albums) => {
-        if (error) {
-            response.status(500).render('error', { error: error })
-        } else {
-            response.render('index', { albums: albums })
-        }
-    })
-})
-
-app.get('/albums/:albumID', (request, response) => {
-    const albumID = request.params.albumID
-
-    database.getAlbumsByID(albumID, (error, albums) => {
-        if (error) {
-            response.status(500).render('error', { error: error })
-        } else {
-            const album = albums[0]
-            response.render('albums/album', { album: album })
-        }
-    })
-})
-*/
 
 module.exports = {updateUserSession, deleteSession, getUserById, getUserByEmail, getUserBySession, addUser}

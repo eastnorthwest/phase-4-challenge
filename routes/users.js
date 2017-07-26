@@ -10,9 +10,8 @@ const auth = require('../auth/auth')
 router.use(bodyParser.urlencoded({ extended: false }))
 
 router.use((request, response, next) => {
-  -- protect this path
-  console.log('auth', request.sessionID)
-  auth.checkUserSession(request.sessionID).next(() => {
+  auth.getUserBySession(request.sessionID).then((user) => {
+    response.locals.user = user
     next()
   }).catch(() => {
     response.redirect('/auth/logout');
@@ -25,6 +24,18 @@ router.get('/newreview/:albumID', (request, response) => {
       response.render('users/newreview', { album: album })
     }).catch((error) => {
       response.status(500).render('error', { error: error })
+    })
+})
+
+router.post('/newreview', (request, response) => {
+    albums.checkNewReview(request.body).then((album) => {
+      reviews.addReview(request.body).then((review) => {
+        response.redirect('/albums/' + request.body.albumId)
+      }).catch(() => {
+        response.redirect('/albums/' + request.body.albumId)
+      })
+    }).catch(() => {
+        response.redirect('/')
     })
 })
 

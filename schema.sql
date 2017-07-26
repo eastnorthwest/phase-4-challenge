@@ -21,6 +21,7 @@ CREATE TABLE reviews (
 
 CREATE TABLE users_reviews (
   user_id INTEGER REFERENCES users (id), 
+  album_id INTEGER REFERENCES albums (id),
   review_id INTEGER REFERENCES reviews (id)
 );
 
