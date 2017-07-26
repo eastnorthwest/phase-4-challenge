@@ -18,7 +18,12 @@ Use the following commands to set up and seed your database:
 2. Set up database tables from `schema.sql`: `$ npm run db:schema`
 2. Load seed data from `albums.sql`: `$ npm run db:seed`
 
-Run thr app
+Run the app
 
 `npm start`
+
+Load the app in your web browser
+
+http://localhost:3000
+
 
