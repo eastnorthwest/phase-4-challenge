@@ -1,0 +1,28 @@
+<% var page='Sign Up' %>
+<% include ../partials/header %>
+<div class="valign-wrapper full-height">
+    <div class="row full-width">
+        <div class="col s4 offset-s4">
+            <h3>Sign Up for Vinyl</h3>
+            <div class="divider margin-bottom"></div>
+            <form action="/auth/signup" method="POST">
+            <div class="row">
+                    <div class="input-field col s12">
+                        <input type="text" name="name" id="name" placeholder="John Smith" class="validate">
+                        <label for="name">Name</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="text" name="email" id="email" placeholder="john@smith.com" class="validate">
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input name="password" id="password" type="password" class="validate">
+                        <label for="password">Password</label>
+                    </div>
+                    <input class="btn margin-top" type="submit" value="Sign Up!"/>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<% include ../partials/footer %>

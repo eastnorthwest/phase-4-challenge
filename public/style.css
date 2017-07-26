@@ -1,0 +1,68 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+}
+
+.brand-logo {
+  margin-left: 30px;
+}
+
+.links {
+  margin-right: 40px;
+}
+
+.header-home {
+  height: 400px;
+  background-image: url('/img/vinyl-back.jpg');
+  background-position: 50% 75%;
+}
+
+.title-home {
+  padding: 150px 0px 0px 20px;
+  height: 400px;
+  width: 25%;
+  background-color: #000;
+  color: #DDD;
+  opacity: .7;
+}
+
+.margin-left {
+  margin-left: 20px;
+}
+
+.margin-right {
+  margin-right: 20px;
+}
+
+.large-margin-top {
+  margin-top: 85px;
+}
+
+.small-margin-top {
+  margin-top: 15px;
+}
+
+.margin-top {
+  margin-top: 50px;
+}
+
+.margin-bottom {
+  margin-bottom: 50px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-height {
+  height: 85vh;
+}
+
+.col.s2.grey.lighten-3.delete-box.center-align {
+  min-height: 140px;
+}
+
+.mouseover {
+  cursor: pointer;
+}

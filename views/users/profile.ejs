@@ -1,0 +1,37 @@
+<% var page='Profile' %>
+<% include ../partials/header %>
+<div class="row">
+    <div class="col s1"></div>
+    <div class="col s3">
+        <img class="large-margin-top" src="https://api.adorable.io/avatars/285/<%= user.email || 'user@email.com' %>.png"/>
+    </div>
+    <div class="col s7">
+        <h2 class="cyan-text large-margin-top">
+            <%= user.name || 'User' %>
+        </h2>
+        <div class="row">
+            <div class="col s6">
+                <h4>Email:</h4>
+            </div>
+            <div class="col s6">
+                <h4><%= user.email || 'user@email.com' %></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s6">
+                <h4>Date joined:</h4>
+            </div>
+            <div class="col s6">
+                <h4><%= user.joined %></h4>
+            </div>
+        </div>
+        <h2 class="cyan-text margin-top">
+            Reviews
+        </h2>
+        <div class="margin-left">
+            <% include ../partials/reviews %> 
+        </div>
+    </div>
+    <div class="col s1"></div>
+</div>
+<% include ../partials/footer %>

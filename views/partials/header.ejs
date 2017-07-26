@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vinyl Records</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-wrapper"><a href="/" class="brand-logo">Vinyl Records <% if (page) { %> | <%= page %><% } %></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down links">
+                <% if ((typeof user != 'undefined') && (user.id)) { %>
+                    <li><a href="/users/<%= user.id %>">Profile</a></li>
+                    <li><a href="/auth/logout">Sign Out</a></li>
+                <% } else { %>
+                    <li><a href="/auth/signup">Sign Up</a></li>
+                    <li><a href="/auth/signin">Sign In</a></li>
+                <% } %>
+              
+            </ul>
+        </div>
+    </nav>
